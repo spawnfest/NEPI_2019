@@ -7,13 +7,10 @@
 # General application configuration
 use Mix.Config
 
-config :shamu,
-  ecto_repos: [Shamu.Repo]
-
 # Configures the endpoint
 config :shamu, ShamuWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "NkKASZu7Hh9HxBA/p/xft3EgKevRmlTLP4IMLTmHjva0wCuJurDutmEWIQtLxyQT",
+  secret_key_base: "TfBKmwzgYX/NcQ4mr9vbblHfo6lGtxygMinn1oEQKapDE22s8icxtqy0zPQHARvO",
   render_errors: [view: ShamuWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Shamu.PubSub, adapter: Phoenix.PubSub.PG2]
 

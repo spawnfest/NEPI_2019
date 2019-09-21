@@ -40,7 +40,7 @@ defmodule ShamuWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_shamu_key",
-    signing_salt: "YVBK0FSv"
+    signing_salt: "USs3bhoE"
 
   plug ShamuWeb.Router
 end
