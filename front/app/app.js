@@ -87,7 +87,7 @@ function getData() {
     }
   }
   
-  return shapes.length > 0 ? shapes[0] : null;
+  return { data: shapes.length > 0 ? shapes[0] : null }
 }
 
 window.send = function () {
