@@ -7,6 +7,10 @@ import { isFrameElement } from 'diagram-js/lib/util/Elements';
 
 export default function ExampleRuleProvider(eventBus) {
   RuleProvider.call(this, eventBus);
+
+  eventBus.on("commandStack.*", function(e) {
+    console.log(event, 'on', e.element.id);
+  });
 }
 
 ExampleRuleProvider.$inject = [ 'eventBus' ];
@@ -15,7 +19,7 @@ inherits(ExampleRuleProvider, RuleProvider);
 
 
 ExampleRuleProvider.prototype.init = function() {
-  this.addRule('shape.create', function(context) {
+  this.addRule('*', function(context) {
     var target = context.target,
         shape = context.shape;
 

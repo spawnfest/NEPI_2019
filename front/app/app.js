@@ -10,6 +10,7 @@ var _getPaletteEntries = PaletteProvider.prototype.getPaletteEntries;
 PaletteProvider.prototype.getPaletteEntries = function(element) {
    var entries = _getPaletteEntries.apply(this);
    console.log(entries);
+   delete entries['create.group'];
    delete entries['hand-tool'];
    delete entries['create.data-object'];
    delete entries['create.data-store'];
@@ -19,22 +20,14 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
    delete entries['create.participant-expanded'];
    delete entries['create.start-event'];
    delete entries['create.subprocess-expanded'];
-   //delete entries['global-connect-tool'];
    delete entries['lasso-tool'];
    delete entries['space-tool'];
    delete entries['tool-separator'];
    delete entries['create.task'];
-  //  delete entries[''];
-  //  delete entries[''];
-  //  delete entries[''];
-  //  delete entries[''];
 
-   //delete entries['bpmn-icon-lasso-tool'];
-	 //delete entries['create.task'];
-	 //delete entries['create.data-store'];
-     return entries;
-
+   return entries;
 }
+
 var _getContextPadEntries = ContextPadProvider.prototype.getContextPadEntries;
 ContextPadProvider.prototype.getContextPadEntries = function(element) {
    var entries = _getContextPadEntries.apply(this, [element]);
@@ -47,7 +40,6 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
 
    delete entries['connect'];
    delete entries['replace'];
-   //delete entries['delete'];
 
    return entries;
 

@@ -1,5 +1,6 @@
 export default class CustomPalette {
-  constructor(create, elementFactory, palette, translate) {
+  constructor(bpmnFactory, create, elementFactory, palette, translate) {
+    this.bpmnFactory = bpmnFactory;
     this.create = create;
     this.elementFactory = elementFactory;
     this.translate = translate;
@@ -9,6 +10,7 @@ export default class CustomPalette {
 
   getPaletteEntries(element) {
     const {
+      bpmnFactory,
       create,
       elementFactory,
       translate
@@ -21,7 +23,8 @@ export default class CustomPalette {
     }
 
     function createUserTask(event) {
-      const shape = elementFactory.createShape({ type: 'bpmn:UserTask' });
+      const businessObject = bpmnFactory.create('bpmn:UserTask');
+      const shape = elementFactory.createShape({ type: 'bpmn:UserTask', businessObject: businessObject });
 
       create.start(event, shape);
     }
@@ -50,6 +53,7 @@ export default class CustomPalette {
 }
 
 CustomPalette.$inject = [
+  'bpmnFactory',
   'create',
   'elementFactory',
   'palette',
