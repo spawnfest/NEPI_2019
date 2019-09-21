@@ -1,6 +1,8 @@
 /**
  * A example palette provider.
  */
+
+
 export default function ExamplePaletteProvider(create, elementFactory, lassoTool, palette) {
   this._create = create;
   this._elementFactory = elementFactory;
@@ -31,8 +33,15 @@ ExamplePaletteProvider.prototype.getPaletteEntries = function() {
         click: function() {
           var shape = elementFactory.createShape({
             width: 80,
-            height: 80
+            height: 80,
+            fill: '#81beb2'
           });
+          shape.labels.push(elementFactory.createLabel({
+            width: 80,
+            height: 80,
+            fill: '#81beb2',
+            text: "worker"
+          }));
 
           create.start(event, shape);
         }

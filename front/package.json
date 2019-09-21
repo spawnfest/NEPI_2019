@@ -39,6 +39,8 @@
   "dependencies": {
     "bpmn-js": "^5.0.4",
     "diagram-js": "^5.0.2",
-    "inherits": "^2.0.3"
+    "diagram-js-direct-editing": "^1.6.0",
+    "inherits": "^2.0.3",
+    "min-dash": "^3.5.2"
   }
 }
