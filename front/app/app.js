@@ -52,3 +52,7 @@ new Diagram({
     ZoomScrollModule
   ]
 });
+
+defaultRenderer.CONNECTION_STYLE = { fill: 'none', strokeWidth: 5, stroke: '#74949c' };
+defaultRenderer.SHAPE_STYLE = { fill: '#81beb2', strokeWidth: 0 };
+defaultRenderer.FRAME_STYLE = { fill: '#536c8c', strokeWidth: 0 };
