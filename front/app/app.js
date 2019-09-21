@@ -101,11 +101,10 @@ window.send = function () {
   })
   .then(res => res.json())
   .then(res => {
-    debugger;
     var codeContainer = document.querySelector('#code-container');
 
     for (let [key, value] of Object.entries(res)) {
-      codeContainer.innerHTML += `<div><span>${key}</span><blockquote><pre><code>${value}</code></pre></blockquote>`;
+      codeContainer.innerHTML += `<div><blockquote><pre><code>${value}</code></pre></blockquote>`;
     }
   });
 }
