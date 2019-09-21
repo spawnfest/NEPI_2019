@@ -86,7 +86,7 @@ function getData() {
       source.children.push(dest);
     }
   }
-  
+
   return { data: shapes.length > 0 ? shapes[0] : null }
 }
 
@@ -100,5 +100,11 @@ window.send = function () {
     body: JSON.stringify(getData())
   })
   .then(res => res.json())
-  .then(res => console.log(res));
+  .then(res => {
+    var codeContainer = document.querySelector('#code-container');
+
+    for (let [key, value] of Object.entries(res)) {
+      codeContainer.innerHTML += `<div><blockquote><pre><code>${value}</code></pre></blockquote>`;
+    }
+  });
 }
