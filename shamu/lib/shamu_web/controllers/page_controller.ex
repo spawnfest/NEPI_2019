@@ -15,22 +15,37 @@ defmodule ShamuWeb.PageController do
 
     x = parse_node(data, [])
 
-    IO.inspect x
+    #IO.inspect x
 
-    [_, %{name: name, type: "worker"}, _] = x
+    [%{name: worker_name_1}, %{name: worker_name_2}, %{name: name, type: "supervisor"}] = x
 
-    d = create_worker(String.to_atom(name))
+wn1 = String.to_atom(worker_name_1)
+wn2 = String.to_atom(worker_name_2)
+    w1 = create_worker(wn1)
+    w2 = create_worker(wn2)
 
+    wn_1 = construct_name(wn1)
+    wn_2 = construct_name(wn2)
+
+    d = create_supervisor(String.to_atom(name), [wn_1, wn_2])
     s = Macro.to_string(d)
+    sw1 = Macro.to_string(w1)
+    sw2 = Macro.to_string(w2)
 
-    IO.inspect(d)
-    IO.inspect(s)
+    #IO.inspect(d)
+    #IO.inspect(s)
 
     #{:ok, file} = File.open("test2.exs", [:write])
     #IO.binwrite(file, s)
     #File.close(file)
 
-    json(conn, s)
+    json(conn, %{supervisor: s, worker_1: sw1, worker_2: sw2})
+  end
+
+  defp construct_name(name) do
+    quote do
+      unquote(name).Worker
+    end
   end
 
   defp parse_node(%{"name" => name, "type" => type, "children" => []}, acc) do
@@ -42,8 +57,42 @@ defmodule ShamuWeb.PageController do
 
   defp create_worker(name) do
     quote do
-      defmodule unquote(name) do
-        def hello(), do: "hello, world!"
+      defmodule unquote(name).Worker do
+        def hello, do: "hello world!"
+      end
+    end
+  end
+
+  defp do_alias_stuff([h | []]) do
+    quote do 
+      alias unquote h 
+    end
+  end
+  defp do_alias_stuff([h | tail]) do
+    quote do 
+      unquote do_alias_stuff(tail)
+      alias unquote h 
+    end
+  end
+
+  defp create_supervisor(name, children \\ []) do
+    quote do
+      defmodule unquote(name).Supervisor do
+        use Supervisor
+
+        unquote(do_alias_stuff(children))
+
+
+        def start_link(opts) do
+          Supervisor.start_link(__MODULE__, :ok, opts)
+        end
+
+        @impl true
+        def init(:ok) do
+          children = unquote(children)
+
+          Supervisor.init(children, strategy: :one_for_one)
+        end
       end
     end
   end
