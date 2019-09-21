@@ -1,0 +1,16 @@
+{
+    "type": "supervisor",
+    "name": "Example",
+    "children": [
+        { 
+            "type": "worker",
+            "name": "WorkerOne",
+            "children": []
+        },
+        {
+            "type": "worker",
+            "name": "WorkerTwo",
+            "children": []
+        }
+    ]
+}
