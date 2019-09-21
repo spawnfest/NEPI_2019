@@ -90,7 +90,7 @@ function getData() {
     let element = elements[i];
     if (element instanceof Shape) {
       shapes.push({
-        name: element.id,
+        name: element.businessObject.name,
         children: [],
         type: element.type == "bpmn:UserTask" ? 'supervisor' : 'worker',
         root: true,  
@@ -113,7 +113,6 @@ function getData() {
 
 window.send = function () {
   let data =  JSON.stringify(getData());
-  debugger;
   fetch('http://localhost:4000/generate', {
     method: 'POST',
     headers: {
