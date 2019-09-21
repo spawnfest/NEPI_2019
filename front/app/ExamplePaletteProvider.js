@@ -20,7 +20,7 @@ ExamplePaletteProvider.$inject = [
 
 ExamplePaletteProvider.prototype.getPaletteEntries = function() {
   var create = this._create,
-      elementFactory = this._elementFactory,
+      elementFactory = this._elementFactory;
 
   return {
     'create-worker': {
