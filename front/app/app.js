@@ -107,8 +107,7 @@ function getData() {
       dest.root = false;
     }
   }
-  let data = { data: shapes.find(s => s.root) };
-  debugger;
+  let data = { data: shapes.filter(s => s.root) };
   return data;
 }
 
