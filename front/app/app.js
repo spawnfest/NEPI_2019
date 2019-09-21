@@ -82,7 +82,8 @@ function getData() {
     let element = elements[i];
     if (element instanceof Shape) {
       shapes.push({
-        name: element.id,
+        id: element.id,
+        name: element.businessObject.name || element.id,
         children: [],
         type: element.type == "bpmn:UserTask" ? 'supervisor' : 'worker',
         root: true,
@@ -93,8 +94,8 @@ function getData() {
   for (let i = 0; i < elements.length; i++) {
     let element = elements[i];
     if (element instanceof Connection) {
-      let source = shapes.find(s => s.name == element.source.id);
-      let dest = shapes.find(s => s.name == element.target.id);
+      let source = shapes.find(s => s.id == element.source.id);
+      let dest = shapes.find(s => s.id == element.target.id);
       source.children.push(dest);
       dest.root = false;
     }
@@ -104,8 +105,8 @@ function getData() {
 }
 
 window.send = function () {
+  console.log(getData());
   document.querySelector('#code-container').innerHTML = "";
-
   fetch('http://localhost:4000/generate', {
     method: 'POST',
     headers: {
