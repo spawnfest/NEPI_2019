@@ -5,48 +5,130 @@ defmodule ShamuWeb.PageController do
     render(conn, "index.html")
   end
 
-  # curl -X POST --data "test" localhost:4000/generate
-  # as for now will always respond with the same reply
+  # curl --header "Content-Type: application/json" -X POST --data @example.json http://localhost:4000/generate
+  # will return code for supervisor
   def generate(conn, %{"data" => data} = _params) do
     #IO.inspect(params)
 
     #IO.inspect data
     #IO.inspect x
 
-    x = parse_node(data, [])
+    #x = parse_node(data, [])
 
-    #IO.inspect x
+    [x] = parse_data(data, [])
 
-    [%{name: worker_name_1}, %{name: worker_name_2}, %{name: name, type: "supervisor"}] = x
+    IO.inspect x
 
-wn1 = String.to_atom(worker_name_1)
-wn2 = String.to_atom(worker_name_2)
-    w1 = create_worker(wn1)
-    w2 = create_worker(wn2)
+    #[%{name: worker_name_1}, %{name: worker_name_2}, %{name: name, type: "supervisor"}] = x
 
-    wn_1 = construct_name(wn1)
-    wn_2 = construct_name(wn2)
+    #[c1, c2, c3] = x.children
 
-    d = create_supervisor(String.to_atom(name), [wn_1, wn_2])
+    #child1_name = construct_name(c1["name"])
+    #child2_name = construct_name(c2["name"])
+    #child3_name = construct_name(c3["name"])
+    #
+    #token_cn1 = String.to_atom(child1_name)
+    #token_cn2 = String.to_atom(child2_name)
+    #token_cn3 = String.to_atom(child3_name)
+    #wn1 = String.to_atom(worker_name_1)
+    #wn2 = String.to_atom(worker_name_2)
+    #w1 = create_worker(wn1)
+    #w2 = create_worker(wn2)
+
+    #wn_1 = construct_name(wn1)
+    #wn_2 = construct_name(wn2)
+
+    children_names = get_children_module_names(x.children, [])
+
+    d = create_supervisor(String.to_atom(x.name), children_names)
     s = Macro.to_string(d)
-    sw1 = Macro.to_string(w1)
-    sw2 = Macro.to_string(w2)
+    #sw1 = Macro.to_string(w1)
+    #sw2 = Macro.to_string(w2)
+    #
+
+    children = create_code(x.children, [])
 
     #IO.inspect(d)
     #IO.inspect(s)
 
-    #{:ok, file} = File.open("test2.exs", [:write])
+    #{:ok, file} = File.open("supervisor.exs", [:write])
     #IO.binwrite(file, s)
     #File.close(file)
 
-    json(conn, %{supervisor: s, worker_1: sw1, worker_2: sw2})
+    #{:ok, file1} = File.open("worker_1.exs", [:write])
+    #IO.binwrite(file1, sw1)
+    #File.close(file1)
+
+    #{:ok, file2} = File.open("worker_2.exs", [:write])
+    #IO.binwrite(file2, sw2)
+    #File.close(file2)
+
+    #json(conn, %{supervisor: s, worker_1: sw1, worker_2: sw2})
+    json(conn, %{main_supervisor: s, children: children})
   end
 
-  defp construct_name(name) do
+  defp construct_name(name, :worker) do
     quote do
       unquote(name).Worker
     end
   end
+  defp construct_name(name, :supervisor) do
+    quote do
+      unquote(name).Supervisor
+    end
+  end
+  defp construct_name(name, _) do
+    quote do
+      unquote(name).Example
+    end
+  end
+
+  defp get_children_module_names([], acc), do: acc
+  defp get_children_module_names([h | t], acc) do
+    type = case h["type"] do
+      "worker" -> :worker
+      "supervisor" -> :supervisor
+      _ -> :example
+    end
+    get_children_module_names(t, acc ++ [construct_name(h["name"], type)])
+
+    #child1_name = construct_name(c1["name"])
+  end
+
+  defp create_code([], acc), do: acc
+  defp create_code([h | t], acc) do
+    res = case h["type"] do
+      "worker" -> Macro.to_string(create_worker(String.to_atom(h["name"])))
+      "supervisor" -> create_supervisor_with_children(h)
+    end
+
+    create_code(t, acc ++ [res])
+  end
+
+  defp create_supervisor_with_children(%{"name" => name, "children" => children}) do
+    children_names = get_children_module_names(children, [])
+
+    d = create_supervisor(String.to_atom(name), children_names)
+
+    Macro.to_string(d)
+  end
+
+  defp parse_data([], acc), do: acc
+  #defp parse_data([data | []], acc) do
+  #  parse_worker(data, acc)
+  #end
+  defp parse_data([data | rest], acc) do
+    parse_worker(data, acc) ++ parse_data(rest, acc)
+  end
+
+  defp parse_worker(%{"name" => name, "type" => "supervisor", "children" => children}, acc) do
+    supervisor = %{
+      name: name,
+      children: children
+    }
+    [supervisor | acc]
+  end
+  defp parse_worker(%{"type" => "worker"}, _acc), do: []
 
   defp parse_node(%{"name" => name, "type" => type, "children" => []}, acc) do
     [ %{name: name, type: type} | acc]
@@ -63,14 +145,14 @@ wn2 = String.to_atom(worker_name_2)
     end
   end
 
-  defp do_alias_stuff([h | []]) do
+  defp add_children_alias([h | []]) do
     quote do 
       alias unquote h 
     end
   end
-  defp do_alias_stuff([h | tail]) do
+  defp add_children_alias([h | tail]) do
     quote do 
-      unquote do_alias_stuff(tail)
+      unquote add_children_alias(tail)
       alias unquote h 
     end
   end
@@ -80,7 +162,7 @@ wn2 = String.to_atom(worker_name_2)
       defmodule unquote(name).Supervisor do
         use Supervisor
 
-        unquote(do_alias_stuff(children))
+        unquote add_children_alias(children)
 
 
         def start_link(opts) do

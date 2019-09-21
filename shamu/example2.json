@@ -1,0 +1,34 @@
+{
+    "data": 
+    [
+        {
+        "type": "supervisor",
+        "name": "Example",
+        "children": [
+            { 
+                "type": "worker",
+                "name": "WorkerOne",
+                "children": []
+            },
+            {
+                "type": "worker",
+                "name": "WorkerTwo",
+                "children": []
+            },
+            {
+                "type": "supervisor",
+                "name": "ExampleTwo",
+                "children": 
+                [
+                    {
+                        "type": "worker",
+                        "name": "WorkerThree",
+                        "children": []
+                    }
+                ]
+            }
+
+        ]
+        }
+    ]
+}
