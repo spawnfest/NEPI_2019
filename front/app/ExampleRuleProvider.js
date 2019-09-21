@@ -1,8 +1,8 @@
 import inherits from 'inherits';
 
-import RuleProvider from '../../lib/features/rules/RuleProvider';
+import RuleProvider from 'diagram-js/lib/features/rules/RuleProvider';
 
-import { isFrameElement } from '../../lib/util/Elements';
+import { isFrameElement } from 'diagram-js/lib/util/Elements';
 
 
 export default function ExampleRuleProvider(eventBus) {
