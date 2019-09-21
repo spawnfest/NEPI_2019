@@ -18,6 +18,11 @@ import ExampleContextPadProvider from './ExampleContextPadProvider';
 import ExamplePaletteProvider from './ExamplePaletteProvider';
 import ExampleRuleProvider from './ExampleRuleProvider';
 
+import { Shape, Connection } from 'diagram-js/lib/model'
+
+import BpmnJS from 'bpmn-js';
+console.log(BpmnJS);
+
 var ExampleModule = {
   __init__: [
     'exampleContextPadProvider',
@@ -59,3 +64,28 @@ var defaultRenderer = diagram.get('defaultRenderer');
 defaultRenderer.CONNECTION_STYLE = { fill: 'none', strokeWidth: 5, stroke: '#74949c' };
 defaultRenderer.SHAPE_STYLE = { fill: '#81beb2', strokeWidth: 0 };
 defaultRenderer.FRAME_STYLE = { fill: '#536c8c', strokeWidth: 0 };
+
+window.save = function () {
+  let canvas = diagram.get('canvas');
+  let shapes = [];
+
+  for (let [key, value] of Object.entries(canvas._elementRegistry._elements)) {
+    if (value.element instanceof Shape) {
+      shapes.push({
+        key: key,
+        children: [],
+        type: value.element.isFrame ? 'supervisor' : 'worker'
+      })
+    }
+  }
+
+  for (let [key, value] of Object.entries(canvas._elementRegistry._elements)) {
+    if (value.element instanceof Connection) {
+      let source = shapes.find(s => s.key == value.element.source.id);
+      let dest = shapes.find(s => s.key == value.element.target.id);
+      source.children.push(dest);
+    }
+  }
+
+  console.log(JSON.stringify(shapes))
+}
