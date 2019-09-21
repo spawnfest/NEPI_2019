@@ -38,11 +38,15 @@ defmodule ShamuWeb.PageController do
     #wn_1 = construct_name(wn1)
     #wn_2 = construct_name(wn2)
 
-    #d = create_supervisor(String.to_atom(x.name), [child1_name, child2_name, child3_name])
-    d = create_supervisor(String.to_atom(x.name))
+    children_names = get_children_module_names(x.children, [])
+
+    d = create_supervisor(String.to_atom(x.name), children_names)
     s = Macro.to_string(d)
     #sw1 = Macro.to_string(w1)
     #sw2 = Macro.to_string(w2)
+    #
+
+    children = create_code(x.children, [])
 
     #IO.inspect(d)
     #IO.inspect(s)
@@ -60,15 +64,54 @@ defmodule ShamuWeb.PageController do
     #File.close(file2)
 
     #json(conn, %{supervisor: s, worker_1: sw1, worker_2: sw2})
-    json(conn, %{supervisor: s, worker_1: "n/a", worker_2: "n/a"})
+    json(conn, %{main_supervisor: s, children: children})
   end
 
-  defp construct_name(name) do
+  defp construct_name(name, :worker) do
     quote do
       unquote(name).Worker
     end
   end
+  defp construct_name(name, :supervisor) do
+    quote do
+      unquote(name).Supervisor
+    end
+  end
+  defp construct_name(name, _) do
+    quote do
+      unquote(name).Example
+    end
+  end
 
+  defp get_children_module_names([], acc), do: acc
+  defp get_children_module_names([h | t], acc) do
+    type = case h["type"] do
+      "worker" -> :worker
+      "supervisor" -> :supervisor
+      _ -> :example
+    end
+    get_children_module_names(t, acc ++ [construct_name(h["name"], type)])
+
+    #child1_name = construct_name(c1["name"])
+  end
+
+  defp create_code([], acc), do: acc
+  defp create_code([h | t], acc) do
+    res = case h["type"] do
+      "worker" -> Macro.to_string(create_worker(String.to_atom(h["name"])))
+      "supervisor" -> create_supervisor_with_children(h)
+    end
+
+    create_code(t, acc ++ [res])
+  end
+
+  defp create_supervisor_with_children(%{"name" => name, "children" => children}) do
+    children_names = get_children_module_names(children, [])
+
+    d = create_supervisor(String.to_atom(name), children_names)
+
+    Macro.to_string(d)
+  end
 
   defp parse_data([], acc), do: acc
   #defp parse_data([data | []], acc) do
