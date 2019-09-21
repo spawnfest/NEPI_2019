@@ -20,9 +20,6 @@ import ExampleRuleProvider from './ExampleRuleProvider';
 
 import { Shape, Connection } from 'diagram-js/lib/model'
 
-import DirectEditing from 'diagram-js-direct-editing/lib/DirectEditing';
-
-import DirectEditingProvider from './DirectEditingProvider';
 import InteractionEventsModule from 'diagram-js/lib/features/interaction-events';
 
 import BpmnJS from 'bpmn-js';
@@ -33,14 +30,10 @@ var ExampleModule = {
     InteractionEventsModule
   ],
   __init__: [
-    'directEditing',
-    'directEditingProvider',
     'exampleContextPadProvider',
     'examplePaletteProvider',
     'exampleRuleProvider'
   ],
-  directEditing: [ 'type', DirectEditing ],
-  directEditingProvider: [ 'type', DirectEditingProvider ],
   exampleContextPadProvider: [ 'type', ExampleContextPadProvider ],
   examplePaletteProvider: [ 'type', ExamplePaletteProvider ],
   exampleRuleProvider: [ 'type', ExampleRuleProvider ]
@@ -67,7 +60,6 @@ var diagram = new Diagram({
     RulesModule,
     SelectionModule,
     ZoomScrollModule,
-    DirectEditing
   ]
 });
 
@@ -77,16 +69,6 @@ var defaultRenderer = diagram.get('defaultRenderer'), canvas = diagram.get('defa
 defaultRenderer.CONNECTION_STYLE = { fill: 'none', strokeWidth: 5, stroke: '#74949c' };
 defaultRenderer.SHAPE_STYLE = { fill: '#81beb2', strokeWidth: 0 };
 defaultRenderer.FRAME_STYLE = { fill: '#536c8c', strokeWidth: 0 };
-
-// var shapeWithLabel = {
-//   id: 's1',
-//   x: 20, y: 10, width: 60, height: 50,
-//   label: 'FOO\nBAR'
-// };
-// canvas.addShape(shapeWithLabel);
-
-// when
-// var activated = directEditing.activate(shapeWithLabel);
 
 function getData() {
   let canvas = diagram.get('canvas');
@@ -110,7 +92,7 @@ function getData() {
     }
   }
 
-  return { data: shapes.length > 0 ? shapes[0] : null }
+  return { data: shapes.length > 0 ? [shapes[0]] : null }
 }
 
 window.send = function () {

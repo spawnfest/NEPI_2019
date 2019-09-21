@@ -36,12 +36,6 @@ ExamplePaletteProvider.prototype.getPaletteEntries = function() {
             height: 80,
             fill: '#81beb2'
           });
-          shape.labels.push(elementFactory.createLabel({
-            width: 80,
-            height: 80,
-            fill: '#81beb2',
-            text: "worker"
-          }));
 
           create.start(event, shape);
         }
