@@ -32,25 +32,25 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
    //delete entries['bpmn-icon-lasso-tool'];
 	 //delete entries['create.task'];
 	 //delete entries['create.data-store'];
-     return entries; 
-  
+     return entries;
+
 }
 var _getContextPadEntries = ContextPadProvider.prototype.getContextPadEntries;
 ContextPadProvider.prototype.getContextPadEntries = function(element) {
    var entries = _getContextPadEntries.apply(this, [element]);
-  
+
    delete entries['append.end-event'];
    delete entries['append.gateway'];
    delete entries['append.intermediate-event'];
    delete entries['append.text-annotation'];
    delete entries['append.append-task'];
-   
+
    delete entries['connect'];
    delete entries['replace'];
    //delete entries['delete'];
 
-   return entries; 
-  
+   return entries;
+
 }
 
 // create modeler
@@ -61,7 +61,7 @@ const bpmnModeler = new BpmnModeler({
   ]
 });
 
-const xml = ` 
+const xml = `
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn">
     <bpmn2:process id="Process_1" isExecutable="false">
@@ -69,7 +69,7 @@ const xml = `
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="BPMNDiagram_1">
       <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-      
+
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>
   </bpmn2:definitions>`;
@@ -93,7 +93,7 @@ function getData() {
         name: element.id,
         children: [],
         type: element.type == "bpmn:UserTask" ? 'supervisor' : 'worker',
-        root: true,  
+        root: true,
       })
     }
   }
@@ -112,8 +112,8 @@ function getData() {
 }
 
 window.send = function () {
-  let data =  JSON.stringify(getData());
-  debugger;
+  document.querySelector('#code-container').innerHTML = "";
+
   fetch('http://localhost:4000/generate', {
     method: 'POST',
     headers: {
