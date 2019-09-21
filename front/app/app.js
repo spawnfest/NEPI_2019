@@ -1,101 +1,120 @@
-import Diagram from 'diagram-js/lib/Diagram';
-
-import ConnectModule from 'diagram-js/lib/features/connect';
-import ContextPadModule from 'diagram-js/lib/features/context-pad';
-import CreateModule from 'diagram-js/lib/features/create';
-import LassoToolModule from 'diagram-js/lib/features/lasso-tool';
-import ModelingModule from 'diagram-js/lib/features/modeling';
-import MoveCanvasModule from 'diagram-js/lib/navigation/movecanvas';
-import MoveModule from 'diagram-js/lib/features/move';
-import OutlineModule from 'diagram-js/lib/features/outline';
-import PaletteModule from 'diagram-js/lib/features/palette';
-import ResizeModule from 'diagram-js/lib/features/resize';
-import RulesModule from 'diagram-js/lib/features/rules';
-import SelectionModule from 'diagram-js/lib/features/selection';
-import ZoomScrollModule from 'diagram-js/lib/navigation/zoomscroll';
-
-import ExampleContextPadProvider from './ExampleContextPadProvider';
-import ExamplePaletteProvider from './ExamplePaletteProvider';
-import ExampleRuleProvider from './ExampleRuleProvider';
-
+import BpmnModeler from 'bpmn-js/lib/Modeler';
+import PaletteProvider from 'bpmn-js/lib/features/palette/PaletteProvider';
+import ContextPadProvider from 'bpmn-js/lib/features/context-pad/ContextPadProvider';
+import customControlsModule from './custom';
 import { Shape, Connection } from 'diagram-js/lib/model'
 
-import InteractionEventsModule from 'diagram-js/lib/features/interaction-events';
+const containerEl = document.getElementById('container');
 
-import BpmnJS from 'bpmn-js';
-console.log(BpmnJS);
+var _getPaletteEntries = PaletteProvider.prototype.getPaletteEntries;
+PaletteProvider.prototype.getPaletteEntries = function(element) {
+   var entries = _getPaletteEntries.apply(this);
+   console.log(entries);
+   delete entries['hand-tool'];
+   delete entries['create.data-object'];
+   delete entries['create.data-store'];
+   delete entries['create.end-event'];
+   delete entries['create.exclusive-gateway'];
+   delete entries['create.intermediate-event'];
+   delete entries['create.participant-expanded'];
+   delete entries['create.start-event'];
+   delete entries['create.subprocess-expanded'];
+   //delete entries['global-connect-tool'];
+   delete entries['lasso-tool'];
+   delete entries['space-tool'];
+   delete entries['tool-separator'];
+   delete entries['create.task'];
+  //  delete entries[''];
+  //  delete entries[''];
+  //  delete entries[''];
+  //  delete entries[''];
 
-var ExampleModule = {
-  __depends__: [
-    InteractionEventsModule
-  ],
-  __init__: [
-    'exampleContextPadProvider',
-    'examplePaletteProvider',
-    'exampleRuleProvider'
-  ],
-  exampleContextPadProvider: [ 'type', ExampleContextPadProvider ],
-  examplePaletteProvider: [ 'type', ExamplePaletteProvider ],
-  exampleRuleProvider: [ 'type', ExampleRuleProvider ]
-};
+   //delete entries['bpmn-icon-lasso-tool'];
+	 //delete entries['create.task'];
+	 //delete entries['create.data-store'];
+     return entries; 
+  
+}
+var _getContextPadEntries = ContextPadProvider.prototype.getContextPadEntries;
+ContextPadProvider.prototype.getContextPadEntries = function(element) {
+   var entries = _getContextPadEntries.apply(this, [element]);
+  
+   delete entries['append.end-event'];
+   delete entries['append.gateway'];
+   delete entries['append.intermediate-event'];
+   delete entries['append.text-annotation'];
+   delete entries['append.append-task'];
+   
+   delete entries['connect'];
+   delete entries['replace'];
+   //delete entries['delete'];
 
-var container = document.querySelector('#container');
+   return entries; 
+  
+}
 
-var diagram = new Diagram({
-  canvas: {
-    container: container
-  },
-  modules: [
-    ConnectModule,
-    ContextPadModule,
-    CreateModule,
-    ExampleModule,
-    LassoToolModule,
-    ModelingModule,
-    MoveCanvasModule,
-    MoveModule,
-    OutlineModule,
-    PaletteModule,
-    ResizeModule,
-    RulesModule,
-    SelectionModule,
-    ZoomScrollModule,
+// create modeler
+const bpmnModeler = new BpmnModeler({
+  container: containerEl,
+  additionalModules: [
+    customControlsModule
   ]
 });
 
-var defaultRenderer = diagram.get('defaultRenderer'), canvas = diagram.get('defaultRenderer');
+const xml = ` 
+  <?xml version="1.0" encoding="UTF-8"?>
+  <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn">
+    <bpmn2:process id="Process_1" isExecutable="false">
+      <bpmn2:startEvent id="StartEvent_1"/>
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+      <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn2:definitions>`;
 
-// override default styles
-defaultRenderer.CONNECTION_STYLE = { fill: 'none', strokeWidth: 5, stroke: '#74949c' };
-defaultRenderer.SHAPE_STYLE = { fill: '#81beb2', strokeWidth: 0 };
-defaultRenderer.FRAME_STYLE = { fill: '#536c8c', strokeWidth: 0 };
+// import XML
+bpmnModeler.importXML(xml, (err) => {
+  if (err) {
+    console.error(err);
+  }
+});
 
 function getData() {
-  let canvas = diagram.get('canvas');
+  let canvas = bpmnModeler.get('canvas');
   let shapes = [];
+  let elements = canvas._elementRegistry._elements['Process_1'].element.children;
 
-  for (let [key, value] of Object.entries(canvas._elementRegistry._elements)) {
-    if (value.element instanceof Shape) {
+  for (let i = 0; i < elements.length; i++) {
+    let element = elements[i];
+    if (element instanceof Shape) {
       shapes.push({
-        name: key,
+        name: element.id,
         children: [],
-        type: value.element.isFrame ? 'supervisor' : 'worker'
+        type: element.type == "bpmn:UserTask" ? 'supervisor' : 'worker',
+        root: true,  
       })
     }
   }
 
-  for (let [key, value] of Object.entries(canvas._elementRegistry._elements)) {
-    if (value.element instanceof Connection) {
-      let source = shapes.find(s => s.name == value.element.source.id);
-      let dest = shapes.find(s => s.name == value.element.target.id);
+  for (let i = 0; i < elements.length; i++) {
+    let element = elements[i];
+    if (element instanceof Connection) {
+      let source = shapes.find(s => s.name == element.source.id);
+      let dest = shapes.find(s => s.name == element.target.id);
       source.children.push(dest);
+      dest.root = false;
     }
   }
-
-  return { data: shapes.length > 0 ? [shapes[0]] : null }
+  let data = { data: shapes.find(s => s.root) };
+  debugger;
+  return data;
 }
 
 window.send = function () {
+  let data =  JSON.stringify(getData());
+  debugger;
   fetch('http://localhost:4000/generate', {
     method: 'POST',
     headers: {
@@ -113,3 +132,5 @@ window.send = function () {
     }
   });
 }
+
+
