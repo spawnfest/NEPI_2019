@@ -11,6 +11,7 @@ defmodule ShamuWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug CORSPlug, origin: "*"
   end
 
   scope "/", ShamuWeb do
@@ -23,6 +24,7 @@ defmodule ShamuWeb.Router do
     pipe_through :api
 
     post "/", PageController, :generate
+    options "/", PageController, :nothing
   end
 
   # Other scopes may use custom stacks.
