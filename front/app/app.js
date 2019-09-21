@@ -31,7 +31,7 @@ var ExampleModule = {
 
 var container = document.querySelector('#container');
 
-new Diagram({
+var diagram = new Diagram({
   canvas: {
     container: container
   },
@@ -53,6 +53,9 @@ new Diagram({
   ]
 });
 
+var defaultRenderer = diagram.get('defaultRenderer');
+
+// override default styles
 defaultRenderer.CONNECTION_STYLE = { fill: 'none', strokeWidth: 5, stroke: '#74949c' };
 defaultRenderer.SHAPE_STYLE = { fill: '#81beb2', strokeWidth: 0 };
 defaultRenderer.FRAME_STYLE = { fill: '#536c8c', strokeWidth: 0 };

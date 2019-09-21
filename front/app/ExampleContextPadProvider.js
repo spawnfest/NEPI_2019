@@ -23,11 +23,25 @@ ExampleContextPadProvider.prototype.getContextPadEntries = function(element) {
     modeling.removeElements([ element ]);
   }
 
+  function addLabel() {
+    console.log(element);
+    console.log(event);
+  }
+
   function startConnect(event, element, autoActivate) {
     connect.start(event, element, autoActivate);
   }
 
   return {
+    'add-label': {
+      group: 'edit',
+      className: 'context-pad-icon-remove',
+      title: 'Label',
+      action: {
+        click: addLabel,
+        dragstart: addLabel
+      }
+    },
     'delete': {
       group: 'edit',
       className: 'context-pad-icon-remove',
