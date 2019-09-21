@@ -19,6 +19,12 @@ defmodule ShamuWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/generate/", ShamuWeb do
+    pipe_through :api
+
+    post "/", PageController, :generate
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ShamuWeb do
   #   pipe_through :api
