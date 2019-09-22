@@ -1,30 +1,36 @@
 export default class CustomPalette {
+  
   constructor(bpmnFactory, create, elementFactory, palette, translate) {
     this.bpmnFactory = bpmnFactory;
     this.create = create;
     this.elementFactory = elementFactory;
     this.translate = translate;
+    this.workersCount = 0;
+    this.supervisorsCount = 0;
 
     palette.registerProvider(this);
   }
 
+
   getPaletteEntries(element) {
-    const {
+    let {
       bpmnFactory,
       create,
       elementFactory,
-      translate
+      translate,
+      workersCount,
+      supervisorsCount,
     } = this;
 
     function createServiceTask(event) {
       const shape = elementFactory.createShape({ type: 'bpmn:ServiceTask' });
-      shape.businessObject.name = "Add worker name";
+      shape.businessObject.name = `Worker ${workersCount++}`;
       create.start(event, shape);
     }
 
     function createUserTask(event) {
       const shape = elementFactory.createShape({ type: 'bpmn:UserTask'});
-      shape.businessObject.name = "Add supervisor name";
+      shape.businessObject.name = `Supervisor ${supervisorsCount++}`;
       create.start(event, shape);
     }
 
