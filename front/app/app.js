@@ -80,6 +80,13 @@ function getData() {
   for (let i = 0; i < elements.length; i++) {
     let element = elements[i];
     if (element instanceof Shape) {
+      if (element.type == "bpmn:UserTask" && element.outgoing.length === 0)
+      {
+        alert("Supervisors needs workers");
+
+        return null;
+      }
+
       shapes.push({
         id: element.id,
         name: element.businessObject.name || element.id,
@@ -99,20 +106,25 @@ function getData() {
       dest.root = false;
     }
   }
-  let data = { data: shapes.filter(s => s.root) };
-  return data;
+
+  return { data: shapes.filter(s => s.root) };
 }
 
 window.send = function () {
-  console.log(getData());
+  var data = getData();
+
+  if (data === null)
+    return;
+
   document.querySelector('#code-container').innerHTML = "";
+
   fetch('http://localhost:4000/generate', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(getData())
+    body: JSON.stringify(data)
   })
   .then(res => res.json())
   .then(res => {
