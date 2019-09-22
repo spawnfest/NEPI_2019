@@ -87,6 +87,13 @@ function getData() {
         return null;
       }
 
+      if (element.type == "bpmn:ServiceTask" && element.incoming.length === 0)
+      {
+        alert("Workers needs supervisors");
+
+        return null;
+      }
+
       shapes.push({
         id: element.id,
         name: element.businessObject.name || element.id,
