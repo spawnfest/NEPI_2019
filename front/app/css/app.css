@@ -4,7 +4,11 @@
     outline: none;
     padding: 0;
   }
-  
+
   html, body, #container {
     height: 100%;
+  }
+
+  .bjs-powered-by {
+    visibility: hidden !important;
   }
