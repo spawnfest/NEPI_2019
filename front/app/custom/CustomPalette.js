@@ -40,7 +40,7 @@ export default class CustomPalette {
       'create.service-task': {
         group: 'activity',
         className: 'bpmn-icon-service-task',
-        title: translate('Create ServiceTask'),
+        title: translate('Create Worker'),
         action: {
           dragstart: createServiceTask,
           click: createServiceTask
@@ -49,7 +49,7 @@ export default class CustomPalette {
       'create.user-task': {
         group: 'activity',
         className: 'bpmn-icon-user-task',
-        title: translate('Create UserTask'),
+        title: translate('Create Supervisor'),
         action: {
           dragstart: createUserTask,
           click: createUserTask
