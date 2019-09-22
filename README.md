@@ -8,12 +8,18 @@ As enterprise software architects you can not write any code. Your can only gene
 
 Fronted application is in [front](front]) folder. In order to start it please cd to it and run:
 
-`npm install`
-
-and then:
-
-`npm start`
+  * `npm install`
+  * `npm start`
 
 ![alt text](images/app.png)
+
+You can create tree of supervised workers using ui blocks. You can connect workers to supervisors and supervisors to supervisors. You cannot link workers to workers and any supervisor cannot be left alone as well as worker. In order to generate code please click `generate code`. Then created model is sent to backend and result is presented below button.
+
+Backend application is in [shamu](shamu]) folder. In order to start it please cd to it and run:
+
+  * `mix deps.get`
+  * `mix phx.server`
+
+
 
 ## Plans
