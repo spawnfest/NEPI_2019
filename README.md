@@ -15,11 +15,11 @@ Fronted application is in [front](front]) folder. In order to start it please cd
 
 You can create tree of supervised workers using ui blocks. You can connect workers to supervisors and supervisors to supervisors. You cannot link workers to workers and any supervisor cannot be left alone as well as worker. In order to generate code please click `generate code`. Then created model is sent to backend and result is presented below button.
 
-Important!
+_Important!_
 
--No supervisor can be childless!
+* No supervisor can be childless!
 
--You must start with supervisor!
+* You must start with supervisor!
 
 You can add names to nodes - those will be included in generated code - all supervisors will have `name.Supervisor` and workers `name.Worker` module names.
 
@@ -33,10 +33,12 @@ Backend app uses Elixir macros to generate code. It will receive a tree that was
 
 
 ## Plans
--Add possibility to generate code from commandline using local json file
+* Add possibility to generate code from commandline using local json file
+* Add different kinds of workers
+* Generate project structure
+* Scaffold tests
 
--Add different kinds of workers
+## More serious explanation
+We wanted to make a tool that makes easy to reason about app's architecture on an abstract level and, on the same time, saves time by generating scaffold of said architecture. You can create graph and have not worry about writing boilerplate code.
 
--Generate project structure
-
--Scaffold tests
+But Enterprise will surely use it....
