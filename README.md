@@ -11,7 +11,7 @@ Fronted application is in [front](front]) folder. In order to start it please cd
   * `npm install`
   * `npm start`
 
-![alt text](images/app.png)
+![alt text](Images/app.png)
 
 You can create tree of supervised workers using ui blocks. You can connect workers to supervisors and supervisors to supervisors. You cannot link workers to workers and any supervisor cannot be left alone as well as worker. In order to generate code please click `generate code`. Then created model is sent to backend and result is presented below button.
 
