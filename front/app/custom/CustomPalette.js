@@ -1,3 +1,4 @@
+import PaletteProvider from 'bpmn-js/lib/features/palette/PaletteProvider';
 export default class CustomPalette {
   
   constructor(bpmnFactory, create, elementFactory, palette, translate) {
@@ -21,6 +22,7 @@ export default class CustomPalette {
       workersCount,
       supervisorsCount,
     } = this;
+    
 
     function createServiceTask(event) {
       const shape = elementFactory.createShape({ type: 'bpmn:ServiceTask' });
@@ -56,6 +58,28 @@ export default class CustomPalette {
     }
   }
 }
+
+var _getPaletteEntries = PaletteProvider.prototype.getPaletteEntries;
+PaletteProvider.prototype.getPaletteEntries = function(element) {
+   var entries = _getPaletteEntries.apply(this);
+   delete entries['create.group'];
+   delete entries['hand-tool'];
+   delete entries['create.data-object'];
+   delete entries['create.data-store'];
+   delete entries['create.end-event'];
+   delete entries['create.exclusive-gateway'];
+   delete entries['create.intermediate-event'];
+   delete entries['create.participant-expanded'];
+   delete entries['create.start-event'];
+   delete entries['create.subprocess-expanded'];
+   delete entries['lasso-tool'];
+   delete entries['space-tool'];
+   delete entries['tool-separator'];
+   delete entries['create.task'];
+
+   return entries;
+}
+
 
 CustomPalette.$inject = [
   'bpmnFactory',

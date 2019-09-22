@@ -1,4 +1,6 @@
+import ContextPadProvider from 'bpmn-js/lib/features/context-pad/ContextPadProvider';
 export default class CustomContextPad {
+
   constructor(config, contextPad, create, elementFactory, injector, translate) {
     this.create = create;
     this.elementFactory = elementFactory;
@@ -72,6 +74,23 @@ export default class CustomContextPad {
       }
     };
   }
+}
+
+var _getContextPadEntries = ContextPadProvider.prototype.getContextPadEntries;
+ContextPadProvider.prototype.getContextPadEntries = function(element) {
+   var entries = _getContextPadEntries.apply(this, [element]);
+
+   delete entries['append.end-event'];
+   delete entries['append.gateway'];
+   delete entries['append.intermediate-event'];
+   delete entries['append.text-annotation'];
+   delete entries['append.append-task'];
+
+   delete entries['connect'];
+   delete entries['replace'];
+
+   return entries;
+
 }
 
 CustomContextPad.$inject = [
