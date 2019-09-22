@@ -18,13 +18,13 @@ export default class CustomPalette {
 
     function createServiceTask(event) {
       const shape = elementFactory.createShape({ type: 'bpmn:ServiceTask' });
-
+      shape.businessObject.name = "Add worker name";
       create.start(event, shape);
     }
 
     function createUserTask(event) {
       const shape = elementFactory.createShape({ type: 'bpmn:UserTask'});
-
+      shape.businessObject.name = "Add supervisor name";
       create.start(event, shape);
     }
 
