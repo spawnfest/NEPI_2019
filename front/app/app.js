@@ -1,48 +1,8 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
-import PaletteProvider from 'bpmn-js/lib/features/palette/PaletteProvider';
-import ContextPadProvider from 'bpmn-js/lib/features/context-pad/ContextPadProvider';
 import customControlsModule from './custom';
 import { Shape, Connection } from 'diagram-js/lib/model'
 
 const containerEl = document.getElementById('container');
-
-var _getPaletteEntries = PaletteProvider.prototype.getPaletteEntries;
-PaletteProvider.prototype.getPaletteEntries = function(element) {
-   var entries = _getPaletteEntries.apply(this);
-   delete entries['create.group'];
-   delete entries['hand-tool'];
-   delete entries['create.data-object'];
-   delete entries['create.data-store'];
-   delete entries['create.end-event'];
-   delete entries['create.exclusive-gateway'];
-   delete entries['create.intermediate-event'];
-   delete entries['create.participant-expanded'];
-   delete entries['create.start-event'];
-   delete entries['create.subprocess-expanded'];
-   delete entries['lasso-tool'];
-   delete entries['space-tool'];
-   delete entries['tool-separator'];
-   delete entries['create.task'];
-
-   return entries;
-}
-
-var _getContextPadEntries = ContextPadProvider.prototype.getContextPadEntries;
-ContextPadProvider.prototype.getContextPadEntries = function(element) {
-   var entries = _getContextPadEntries.apply(this, [element]);
-
-   delete entries['append.end-event'];
-   delete entries['append.gateway'];
-   delete entries['append.intermediate-event'];
-   delete entries['append.text-annotation'];
-   delete entries['append.append-task'];
-
-   delete entries['connect'];
-   delete entries['replace'];
-
-   return entries;
-
-}
 
 // create modeler
 const bpmnModeler = new BpmnModeler({
