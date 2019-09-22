@@ -1,6 +1,7 @@
 import inherits from 'inherits';
 
 import RuleProvider from 'diagram-js/lib/features/rules/RuleProvider';
+import { Shape, Connection } from 'diagram-js/lib/model';
 
 
 /**
@@ -13,6 +14,14 @@ import RuleProvider from 'diagram-js/lib/features/rules/RuleProvider';
  * @param {EventBus} eventBus
  */
 export default function CustomRules(eventBus) {
+  eventBus.on('commandStack.connection.create.canExecute', 2000, (event) => {
+    var source = event.context.source;
+    var target = event.context.target;
+
+    if (source !== null && target !== null && source.type === 'bpmn:ServiceTask' && target.type === 'bpmn:UserTask')
+      return false;
+  });
+
   RuleProvider.call(this, eventBus);
 }
 
@@ -23,14 +32,20 @@ CustomRules.$inject = [ 'eventBus' ];
 
 CustomRules.prototype.init = function() {
 
+  this.addRule('commandStack.connection.create.canExecute', function(context) {
+    console.log('commandStack.connection.create.canExecute');
+  });
   // there exist a number of modeling actions
   // that are identified by a unique ID. We
   // can hook into each one of them and make sure
   // they are only allowed if we say so
   this.addRule('shape.create', function(context) {
-
-    var shape = context.shape,
-        target = context.target;
+    debugger;
+    console.log("dupa");
+    console.log(context);
+    return false;
+    // var shape = context.shape,
+    //     target = context.target;
 
     // we check for a custom vendor:allowDrop attribute
     // to be present on the BPMN 2.0 xml of the target
@@ -39,14 +54,14 @@ CustomRules.prototype.init = function() {
     // we could practically check for other things too,
     // such as incoming / outgoing connections, element
     // types, ...
-    var shapeBo = shape.businessObject,
-        targetBo = target.businessObject;
+    // var shapeBo = shape.businessObject,
+    //     targetBo = target.businessObject;
 
-    var allowDrop = targetBo.get('vendor:allowDrop');
+    // var allowDrop = targetBo.get('vendor:allowDrop');
 
-    if (!allowDrop || !shapeBo.$instanceOf(allowDrop)) {
-      return false;
-    }
+    // if (!allowDrop || !shapeBo.$instanceOf(allowDrop)) {
+    //   return false;
+    // }
 
     // not returning anything means other rule
     // providers can still do their work

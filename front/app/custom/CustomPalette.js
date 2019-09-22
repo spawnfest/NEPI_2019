@@ -23,8 +23,7 @@ export default class CustomPalette {
     }
 
     function createUserTask(event) {
-      const businessObject = bpmnFactory.create('bpmn:UserTask');
-      const shape = elementFactory.createShape({ type: 'bpmn:UserTask', businessObject: businessObject });
+      const shape = elementFactory.createShape({ type: 'bpmn:UserTask'});
 
       create.start(event, shape);
     }
@@ -57,5 +56,5 @@ CustomPalette.$inject = [
   'create',
   'elementFactory',
   'palette',
-  'translate'
+  'translate',
 ];

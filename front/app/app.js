@@ -9,7 +9,6 @@ const containerEl = document.getElementById('container');
 var _getPaletteEntries = PaletteProvider.prototype.getPaletteEntries;
 PaletteProvider.prototype.getPaletteEntries = function(element) {
    var entries = _getPaletteEntries.apply(this);
-   console.log(entries);
    delete entries['create.group'];
    delete entries['hand-tool'];
    delete entries['create.data-object'];
