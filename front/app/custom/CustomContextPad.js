@@ -53,26 +53,7 @@ export default class CustomContextPad {
       create.start(event, shape, element);
     }
 
-    return {
-      'append.service-task': {
-        group: 'model',
-        className: 'bpmn-icon-service-task',
-        title: translate('Append ServiceTask'),
-        action: {
-          click: appendUserTask,
-          dragstart: appendUserTaskStart
-        }
-      },
-      'append.user-task': {
-        group: 'model',
-        className: 'bpmn-icon-user-task',
-        title: translate('Append UserTask'),
-        action: {
-          click: appendServiceTask,
-          dragstart: appendServiceTaskStart
-        }
-      }
-    };
+    return { };
   }
 }
 
